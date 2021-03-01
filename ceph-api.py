@@ -35,6 +35,16 @@ class CephClient:
     authorization = 'AWS ' + self.access_key + ":" + signature
     r = requests.put(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters)
     print(r.text)
+    
+  def remove_user(self,uid):
+    resource = self.endpoint + "/admin/user"
+    parameters = {'uid': uid}
+    timestamp = formatdate(usegmt=True)
+    string_to_sign = 'DELETE\n\n\n' + timestamp + "\n" + "/admin/user"
+    signature = base64.encodestring(hmac.new(self.secret_key.encode('UTF-8'),string_to_sign.encode('UTF-8'),sha1).digest()).strip().decode()
+    authorization = 'AWS ' + self.access_key + ":" + signature
+    r = requests.delete(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters)
+    print(r.text)
 
   def get_buckets(self):
     resource = self.endpoint + "/"
