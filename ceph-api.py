@@ -16,7 +16,7 @@ class CephClient:
     self.secret_key = secretkey
     self.endpoint = endpoint_url
 
-def get_user(self,user_uid):
+  def get_user(self,user_uid):
     resource = self.endpoint + "/admin/user"
     parameters = {'uid': user_uid}
     timestamp = formatdate(usegmt=True)
@@ -36,7 +36,7 @@ def get_user(self,user_uid):
     r = requests.put(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters)
     print(r.text)
 
-def get_buckets(self):
+  def get_buckets(self):
     resource = self.endpoint + "/"
     timestamp = formatdate(usegmt=True)
     string_to_sign = 'GET\n\n\n' + timestamp + "\n" + "/"
@@ -54,7 +54,7 @@ def get_buckets(self):
     r = requests.put(resource,headers={'Date':timestamp,'Authorization':authorization})
     print(r.text)
 
-def delete_bucket(self,name):
+  def delete_bucket(self,name):
     resource = self.endpoint + "/" + name
     timestamp = formatdate(usegmt=True)
     string_to_sign = 'DELETE\n\n\n' + timestamp + "\n" + "/" + name
