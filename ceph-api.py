@@ -44,7 +44,7 @@ class CephClient:
     signature = base64.encodestring(hmac.new(self.secret_key.encode('UTF-8'),string_to_sign.encode('UTF-8'),sha1).digest()).strip().decode()
     authorization = 'AWS ' + self.access_key + ":" + signature
     r = requests.delete(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters)
-    print(r.text)
+    print(r.status_code)
 
   def get_buckets(self):
     resource = self.endpoint + "/"
