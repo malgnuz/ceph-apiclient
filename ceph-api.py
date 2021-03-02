@@ -46,29 +46,34 @@ class CephClient:
     r = requests.delete(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters)
     print(r.status_code)
 
-  def get_buckets(self):
-    resource = self.endpoint + "/"
+  def get_bucket_quota(self,uid):
+    resource = self.endpoint + "/admin/user"
+    parameters = {'quota':'','uid': uid,'quota-type':'bucket'}
     timestamp = formatdate(usegmt=True)
-    string_to_sign = 'GET\n\n\n' + timestamp + "\n" + "/"
+    string_to_sign = 'GET\n\n\n' + timestamp + "\n" + "/admin/user"
     signature = base64.encodestring(hmac.new(self.secret_key.encode('UTF-8'),string_to_sign.encode('UTF-8'),sha1).digest()).strip().decode()
     authorization = 'AWS ' + self.access_key + ":" + signature
-    r = requests.get(resource,headers={'Date':timestamp,'Authorization':authorization})
+    r = requests.get(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters)
     print(r.text)
 
-  def create_bucket(self,name):
-    resource = self.endpoint + "/" + name
+  def set_bucket_quota(self,uid):
+    resource = self.endpoint + "/admin/user"
+    parameters = {'quota':'','uid': uid,'quota-type':'bucket'}
+    payload = json.dumps({"enabled": 'true',"check_on_raw": 'true',"max_size":1099511627776,"max_size_kb":1073741824,"max_objects":-1})
     timestamp = formatdate(usegmt=True)
-    string_to_sign = 'PUT\n\n\n' + timestamp + "\n" + "/" + name
+    string_to_sign = 'PUT\n\n\n' + timestamp + "\n" + "/admin/user"
     signature = base64.encodestring(hmac.new(self.secret_key.encode('UTF-8'),string_to_sign.encode('UTF-8'),sha1).digest()).strip().decode()
     authorization = 'AWS ' + self.access_key + ":" + signature
-    r = requests.put(resource,headers={'Date':timestamp,'Authorization':authorization})
-    print(r.text)
+    r = requests.put(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters,data=payload)
+    print(r.status_code)
 
-  def delete_bucket(self,name):
-    resource = self.endpoint + "/" + name
+  def set_individual_bucket_quota(self,uid,bucket,quota_settings):
+    resource = self.endpoint + "/admin/bucket"
+    parameters = {'quota':'','uid': uid,'bucket':bucket}
+    payload = json.dumps(quota_settings)
     timestamp = formatdate(usegmt=True)
-    string_to_sign = 'DELETE\n\n\n' + timestamp + "\n" + "/" + name
+    string_to_sign = 'PUT\n\n\n' + timestamp + "\n" + "/admin/bucket"
     signature = base64.encodestring(hmac.new(self.secret_key.encode('UTF-8'),string_to_sign.encode('UTF-8'),sha1).digest()).strip().decode()
     authorization = 'AWS ' + self.access_key + ":" + signature
-    r = requests.delete(resource,headers={'Date':timestamp,'Authorization':authorization})
+    r = requests.put(resource,headers={'Date':timestamp,'Authorization':authorization},params=parameters,data=payload)
     print(r.status_code)
