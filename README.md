@@ -8,6 +8,7 @@ This is a REST API client based in Python to perform administrative tasks over a
 
 - Get users.
 - Create users.
+- Remove users.
 
 ### Buckets
 
