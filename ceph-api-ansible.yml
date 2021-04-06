@@ -1,0 +1,25 @@
+- name: 'Performs requests to CEPH ADMIN API'
+  hosts: all
+  tasks:
+    - name: 'Create USER'
+      block:
+        - name: 'Calc authorization header'
+          local_action:
+          module: shell
+          args: auth.py
+          register: auth_header
+
+        - set_fact:
+            jsondata: "{{ auth_header.stdout | from_json }}"
+
+        - set_fact:
+            date: "{{ jsondata | json_query('Date') }}"
+            authorization: "{{ jsondata | json_query('Authorization') }}"
+    
+        - name: 'Get user'
+          uri:
+            url: "RGW_ENDPOINT/admin/user?uid=user_1"
+            headers:
+              Date: "{{ date }}"
+              Authorization: "{{ authorization }}"
+            return_content: yes
