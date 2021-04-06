@@ -1,7 +1,7 @@
 - name: 'Performs requests to CEPH ADMIN API'
   hosts: all
   tasks:
-    - name: 'Create USER'
+    - name: 'GET USER'
       block:
         - name: 'Calc authorization header'
           local_action:
