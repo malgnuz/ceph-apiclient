@@ -27,10 +27,39 @@ class CephClient:
     authorization = 'AWS ' + self.access_key + ":" + signature
     return json.dumps({'Date': timestamp, 'Authorization' : authorization })
 
-parser = argparse.ArgumentParser(description='Returns both Date and Authorization headers')
+parser = argparse.ArgumentParser(description='Returns both Date and Authorization headers',formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('accesskey',help='The access key of the administrative user')
 parser.add_argument('secretkey',help='The secret key of the administrative user')
-parser.add_argument('operation',help='The operation to be performed. Valid operations are: \n get_user \n create_user \n mod_user \n add_cap \n add_key \n remove_cap \n remove_key \n remove_user')
+parser.add_argument('operation',help='''The operation to be performed. Valid operations are:
+
+add_cap 
+add_key 
+create_user 
+get_bucket  --bucket BUCKET_NAME
+get_bucket_index
+get_bucket_info
+get_bucket_quota
+get_bucket_policy
+get_user_quota
+get_object  --bucket BUCKET_NAME --object OBJECT_NAME
+get_usage
+get_user 
+get_user_quota
+link_bucket
+mod_user 
+put_bucket  --bucket BUCKET_NAME
+put_object  --bucket BUCKET_NAME --object OBJECT_NAME
+remove_bucket
+remove_cap 
+remove_key 
+remove_object
+remove_usage
+remove_user
+set_user_quota
+set_bucket_quota
+set_individual_bucket_quota
+unlink_bucket
+                                     ''')
 parser.add_argument('--bucket',help='The bucket name to create or retrieve')
 parser.add_argument('--object',help='The object name to create or retrieve')
 args = parser.parse_args()
